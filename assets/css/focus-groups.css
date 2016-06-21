@@ -1,0 +1,152 @@
+.focus-groups-table{
+    color: #2B2B2B;
+    font-size: 0.8em;
+}
+div.focus-groups-table{
+    display: table;
+    border-collapse: collapse;
+}
+
+.focus-groups-table .thead,
+.focus-groups-table .tbody{
+    display: table-row;
+    border: 1px solid #ccc;
+}
+
+.focus-groups-table .thead div,
+.focus-groups-table .tbody div{
+    display: table-cell;
+    padding: 7px 10px;
+}
+
+.focus-groups-table thead{}
+.focus-groups-table .thead,
+.focus-groups-table thead tr{
+    background-color: #5B9BD5;
+    color: #fff;
+}
+.focus-groups-table .thead div,
+.focus-groups-table thead tr th{
+    text-align: center;
+    vertical-align: middle;
+}
+.focus-groups-table tbody{}
+.focus-groups-table tbody tr{}
+.focus-groups-table .tbody.even,
+.focus-groups-table tbody tr.even{
+    background-color: #ffffff;
+}
+.focus-groups-table .tbody.odd,
+.focus-groups-table tbody tr.odd{
+    background-color: #DEEBF6;
+}
+.focus-groups-table .tbody div,
+.focus-groups-table tbody tr td{
+    text-align: center;
+    vertical-align: middle;
+}
+.focus-groups-table .tbody div a,
+.focus-groups-table tbody tr td a{
+    text-decoration: none;
+    border-bottom: none;
+}
+.focus-groups-table .tbody .groups-table-thumb,
+.focus-groups-table tr td .groups-table-thumb{
+    width: 50%;
+    margin: 0 auto;
+    display: block;
+}
+
+.focus-groups-table .fg-column-facility{
+    width: 20%;
+}
+.focus-groups-table .fg-column-city{}
+.focus-groups-table .fg-column-age-range{
+    width: 13%;
+}
+.focus-groups-table .fg-column-gender{
+    width: 11%;
+}
+.focus-groups-table .fg-column-short a{
+    display: block;
+}
+.focus-groups-table .fg-column-pay{
+    width: 10%;
+}
+.focus-groups-table .fg-column-reg{
+    width: 16%;
+}
+
+
+.single-focus-group{}
+.single-focus-group .other-focus-groups-title{
+    text-transform: none;
+    margin: 20px 0;
+}
+.single-focus-group .short-info-block{
+    margin-bottom: 40px;
+}
+.single-focus-group .short-info{
+    margin-bottom: 5px;
+    overflow: hidden;
+}
+.single-focus-group .short-info .reg-single-link{
+    text-decoration: none;
+    color: #fff;
+    background-color: #5B9BD5;
+    border: 2px solid #3075B3;
+    border-radius: 4px;
+    padding: 0px 5px;
+    float: right;
+    margin-bottom: 30px;
+}
+.single-focus-group .short-info .reg-single-link:hover{
+    opacity: 0.8;
+}
+
+.contact-card-logo{
+    float: right;
+    max-height: 200px;
+    overflow: hidden;
+}
+.no-photo-logo{
+    max-width: 235px;
+    margin-top: -60px;
+    margin-right: -50px;
+}
+
+.fg-column-gender .fg-gender{
+    background: url("../images/male-female-boarder.png") no-repeat;
+    background-size: cover;
+    text-indent: -9999px;
+    height: 30px;
+    display: inline-block;
+    width: 30px;
+    border-radius: 5px;
+}
+.fg-column-gender .fg-gender.gender_F{
+    background-image: url("../images/female-boarder.png");
+}
+.fg-column-gender .fg-gender.gender_M{
+    background-image: url("../images/male-boarder.png");
+}
+.fg-column-gender .fg-gender.gender_MF{
+    width: 30px;
+}
+
+
+.fg-embed-holder{
+    overflow: hidden;
+}
+.fg-embed-holder .fg-embed-link{
+    font-size: 13px;
+    float: right;
+    text-decoration: none !important;
+    display: block;
+    border: none !important;
+    cursor: pointer;
+}
+.fg-embed-holder textarea{
+    width: 100%;
+    display: none;
+}

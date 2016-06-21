@@ -1,0 +1,10 @@
+.mce-i-icons.dashicons-groups-fg:before{
+    content: "\f307";
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+    font: normal 16px/1 'dashicons';
+    vertical-align: top;
+}
+.big-gf-load-spinner{
+    background: url("../images/ajax-loader.gif") center no-repeat;
+}

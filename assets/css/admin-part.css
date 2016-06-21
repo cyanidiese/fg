@@ -1,0 +1,21 @@
+.postmeta-field-label{
+    margin-bottom: 10px;
+    display: inline-block;
+}
+.bottom-margin{
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+.bootstrap-switch.bootstrap-switch-wrapper{
+    height: 30px;
+}
+.groups-table-thumb{
+    max-width: 45px;
+}
+.column-image{
+    width: 70px;
+}
+.manage-column.column-order{
+    width: 65px;
+}
