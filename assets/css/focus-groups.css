@@ -150,3 +150,25 @@ div.focus-groups-table{
     width: 100%;
     display: none;
 }
+
+.fg-propose-field{
+    margin-bottom: 20px;
+}
+.fg-propose-field label{
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.fg-propose-field button{
+    text-decoration: none;
+    color: #fff;
+    background-color: #5B9BD5;
+    border: 2px solid #3075B3;
+    border-radius: 4px;
+    padding: 5px 15px;
+    margin-bottom: 30px;
+}
+.need-captcha-validation iframe{
+    box-shadow: 0px 0px 15px red !important;
+    border-radius: 7px;
+}

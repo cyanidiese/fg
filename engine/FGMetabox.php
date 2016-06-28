@@ -29,9 +29,22 @@ class FGMetabox extends StdClass {
 		return $this->metaBoxTitle;
 	}
 
-	public function outputPostMetabox( $post ) {
+    public function getFieldBySlug($fields, $slug){
+
+        foreach($fields as $field){
+            if($field['name'] == $slug){
+                return $field;
+            }
+        }
+
+        return false;
+
+    }
+
+	public function outputPostMetabox( $post = null ) {
 		$fields = $this->getFields();
-		$values = $this->getValues( $post->ID, $fields );
+		$post_id = ($post) ? $post->ID : 0;
+		$values = $this->getValues( $post_id, $fields );
 		$this->metaBoxViews->outputPostMetabox(
 			$post, $fields, $values
 		);

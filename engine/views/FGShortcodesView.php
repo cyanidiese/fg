@@ -3,9 +3,11 @@
 class FGShortcodesView extends StdClass {
 
 	private $postTypeSlug;
+	private $shortCodesEngine;
 
-	public function __construct( $postTypeSlug ) {
+	public function __construct( $postTypeSlug, $shortCodesEngine ) {
 		$this->postTypeSlug = $postTypeSlug;
+		$this->shortCodesEngine = $shortCodesEngine;
 	}
 
     public function slugify($text)
@@ -447,6 +449,157 @@ class FGShortcodesView extends StdClass {
 			</form>
 		</div>
 	<?php
+	}
+
+	private function proposeFocusGroup($defaults) {
+
+        $result = "";
+        if(defined('FG_DISPLAYED_PROPOSE_FORM')){
+            return "";
+        }
+        else {
+            define('FG_DISPLAYED_PROPOSE_FORM', true);
+            if(trim($_POST['g-recaptcha-response'])) {
+                $this->shortCodesEngine->addProposedFocusGroup($_POST['fg_propose']);
+                $result .= '<h4>Thank You. Your focus group is pending review now.</h4>';
+            }
+            else{
+                $result .= "
+                    <form class='fg-propose-form' method='post'>
+                        <div class='fg-propose-field'>
+
+                            <label for='fg_propose_title'>Title</label>
+                            <input type='text' id='fg_propose_title' name='fg_propose[title]' data-validation='required'>
+                            
+                        </div>
+                        <div class='fg-propose-field'>
+
+                            <label for='fg_propose_expiration'>Expiration Date (mm/dd/yyyy)</label>
+                            <input type='text' id='fg_propose_expiration' name='fg_propose[expiration]' 
+                            value='".date('m/d/Y')."'
+                            data-validation='required date' data-validation-format='mm/dd/yyyy'
+                            data-validation-require-leading-zero='false'
+                            >
+                            
+                        </div>
+                        <div class='fg-propose-field'>
+
+                            <label for='fg_propose_short_description'>Short Description</label>
+                            <input type='text' id='fg_propose_short_description' name='fg_propose[short_description]' data-validation='required'>
+                            
+                        </div>
+                        <div class='fg-propose-field'>
+
+                            <label for='fg_propose_city'>City</label>
+                            <input type='hidden' name='fg_propose[is_national]' value='no'>
+                            <input type='text' id='fg_propose_city' name='fg_propose[city]' data-validation='required'>
+                            
+                        </div>
+                        <div class='fg-propose-field'>
+
+                            <label for='fg_propose_pay'>Pay ($)</label>
+                            <input type='text' id='fg_propose_pay' name='fg_propose[pay]' data-validation='required'>
+                            
+                        </div>
+                        <div class='fg-propose-field'>
+
+                            <label for='fg_propose_facility'>Facility</label>
+                            <input type='text' id='fg_propose_facility' name='fg_propose[facility]' data-validation='required'>
+                            
+                        </div>
+                        <div class='fg-propose-field'>
+
+                            <label for='fg_propose_gender'>Gender</label>
+                            <input type='text' id='fg_propose_gender' name='fg_propose[gender]' data-validation='required'>
+                            
+                        </div>
+                        <div class='fg-propose-field'>
+
+                            <label for='fg_propose_age_range'>Age Range</label>
+                            <input type='text' id='fg_propose_age_range' name='fg_propose[age_range]' data-validation='required'>
+                            
+                        </div>
+                        <div class='fg-propose-field'>
+
+                            <label for='fg_propose_registration'>Registration Link</label>
+                            <input type='text' id='fg_propose_registration' name='fg_propose[registration]'>
+                            
+                        </div>
+                        <div class='fg-propose-field'>
+
+                            <label for='fg_propose_long_description'>Long Description</label>
+                            <textarea id='fg_propose_long_description' name='fg_propose[long_description]' rows='5'></textarea>
+                            
+                        </div>
+                        <div class='fg-propose-field'>
+                            
+                            <div id='captcha-validation'></div>
+                            
+                        </div>
+                        <div class='fg-propose-field'>
+
+                            <button type='submit' id='fg-propose-submit'>Submit Group For Preview</button>
+                            
+                        </div>
+                    </form>
+                    
+                        <script type='text/javascript'>
+                            var availableCities = ". json_encode($defaults['cities']).";
+                            var availableGenders = ". json_encode($defaults['genders']).";
+                            var availableRanges = ". json_encode($defaults['ranges']).";
+                            var verifyCallback = function() {
+                                var captchaBlock = jQuery('#captcha-validation');
+                                    if(grecaptcha.getResponse().trim() == ''){
+                                        e.preventDefault();
+                                        captchaBlock.addClass('need-captcha-validation');
+                                    }
+                                    else{
+                                        captchaBlock.removeClass('need-captcha-validation');
+                                    }
+                            };
+                            var onloadCallback = function() {
+                                grecaptcha.render('captcha-validation', {
+                                    'sitekey' : '6LeKLSMTAAAAAC79RE1UhbtMqXfOnTFWxNraW9pc',
+                                    'callback' : verifyCallback,
+                                    'theme' : 'light'
+                                });
+                            };
+                            jQuery.validate({
+                                modules : 'date'
+                            });
+                            jQuery(function() {
+                                jQuery( '#fg_propose_expiration' ).datepicker();
+                            });
+                            jQuery( '#fg_propose_city' ).autocomplete({
+                                source: availableCities
+                            });
+                            jQuery( '#fg_propose_gender' ).autocomplete({
+                                source: availableGenders
+                            });
+                            jQuery( '#fg_propose_age_range' ).autocomplete({
+                                source: availableRanges
+                            });
+                            jQuery(document).ready(function(){
+                                jQuery('#fg-propose-submit').click(function(e){
+                                    var captchaBlock = jQuery('#captcha-validation');
+                                    if(grecaptcha.getResponse().trim() == ''){
+                                        e.preventDefault();
+                                        captchaBlock.addClass('need-captcha-validation');
+                                    }
+                                    else{
+                                        captchaBlock.removeClass('need-captcha-validation');
+                                    }
+                                });
+                            });
+                        </script>
+                        <script src='https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit' async defer></script>
+                        ";
+                $result .= '';
+            }
+
+            return $result;
+        }
+
 	}
 
 }

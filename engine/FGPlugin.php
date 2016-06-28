@@ -5,7 +5,7 @@ if ( ! defined( "FG_VERSION_MAIN" ) ) {
 	define( "FG_VERSION_MAIN", "1" );
 }
 if ( ! defined( "FG_VERSION_BUILD" ) ) {
-	define( "FG_VERSION_BUILD", "0" );
+	define( "FG_VERSION_BUILD", "2" );
 }
 if ( ! defined( "FG_VERSION" ) ) {
 	define( "FG_VERSION", FG_VERSION_MAIN . "." . FG_VERSION_BUILD );
@@ -14,6 +14,7 @@ if ( ! defined( "FG_EMBED" ) ) {
 	define( "FG_EMBED", false );
 }
 
+require_once "FGProposed.php";
 require_once "FGMetabox.php";
 require_once "FGShortcodes.php";
 require_once "FGWidget.php";
@@ -25,6 +26,7 @@ class FGPlugin {
 
 	private $metaboxes;
 	private $shortcodes;
+	private $proposed;
 
 	public function registerScripts() {
 		wp_register_style( 'fg-bootstrap-css', FG_URL . "assets/bootstrap/css/bootstrap.css", array(), "3.2.0" );
@@ -101,7 +103,10 @@ class FGPlugin {
 
 	public function includeFrontendScriptsAndStyles() {
 		wp_enqueue_style( 'fg_frontend_styles', FG_URL . "assets/css/focus-groups.css", array(), FG_VERSION );
+		wp_enqueue_style( 'fg_frontend_jquery_ui_css', "//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css", array(), FG_VERSION );
 		wp_enqueue_script( 'fg_frontend_scripts', FG_URL . "assets/js/focus-groups.js", array("jquery"), FG_VERSION, true );
+		wp_enqueue_script( 'fg_frontend_validation', "//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.2.43/jquery.form-validator.min.js", array("jquery"), FG_VERSION, false );
+		wp_enqueue_script( 'fg_frontend_jquery_ui_js', "//code.jquery.com/ui/1.11.4/jquery-ui.js", array("jquery"), FG_VERSION, false );
 	}
 
 
@@ -438,8 +443,9 @@ class FGPlugin {
 		$this->postTypeSlug = "focusgroup";
 		$this->pluginName   = "FocusGroups";
 
+		$this->proposed  = new FGProposed( $this->postTypeSlug );
 		$this->metaboxes  = new FGMetabox( $this->postTypeSlug );
-		$this->shortcodes = new FGShortcodes( $this->metaboxes, $this->postTypeSlug );
+		$this->shortcodes = new FGShortcodes( $this->metaboxes, $this->postTypeSlug, $this->proposed );
 		$fgMetaboxes = $this->metaboxes;
 		$fgShortcodes = $this->shortcodes;
 

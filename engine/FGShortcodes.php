@@ -8,9 +8,9 @@ class FGShortcodes extends StdClass {
 	private $shortcodeView;
 	private $postTypeSlug;
 
-	function __construct( $metaboxes, $postTypeSlug ) {
+	function __construct( $metaboxes, $postTypeSlug, $propose ) {
 		$this->metaboxes     = $metaboxes;
-		$this->shortcodeView = new FGShortcodesView($postTypeSlug);
+		$this->shortcodeView = new FGShortcodesView($postTypeSlug, $propose);
 		$this->postTypeSlug = $postTypeSlug;
 	}
 
@@ -23,6 +23,7 @@ class FGShortcodes extends StdClass {
 		$shortcodes = array(
 			"focus_groups" => "showFocusGroups",
 			"focus_group"  => "showSingleFocusGroup",
+			"focus_group_propose"  => "proposeFocusGroup",
 		);
 
 		foreach ( $shortcodes as $name => $callback ) {
@@ -169,6 +170,24 @@ class FGShortcodes extends StdClass {
 		$postItem->fg_values = $this->metaboxes->getValues( $ID );
 
 		return $this->shortcodeView->render( "singleView", $postItem );
+	}
+
+	function proposeFocusGroup($atts) {
+
+        $fields = $this->metaboxes->getFields();
+        $values = $this->metaboxes->getValues( 0, $fields );
+
+        $defaultCities = $this->metaboxes->getFieldBySlug($fields, 'city');
+        $defaultGenders = $this->metaboxes->getFieldBySlug($fields, 'gender');
+        $defaultRanges = $this->metaboxes->getFieldBySlug($fields, 'age_range');
+
+        $defaults = array(
+            'cities' => ($defaultCities) ? $defaultCities['autocomplete'] : array(),
+            'genders' => ($defaultGenders) ? $defaultGenders['autocomplete'] : array(),
+            'ranges' => ($defaultRanges) ? $defaultRanges['autocomplete'] : array(),
+        );
+
+		return $this->shortcodeView->render( "proposeFocusGroup", $defaults );
 	}
 
 }
