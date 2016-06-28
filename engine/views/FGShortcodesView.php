@@ -123,7 +123,7 @@ class FGShortcodesView extends StdClass {
 			$payMeta           = $this->getVal( "pay", $focusGroup, true );
 			$gender            = $this->getVal( "gender", $focusGroup );
 			$age_range         = $this->getVal( "age_range", $focusGroup );
-			$link              = $this->getVal( "registration", $focusGroup, true );
+			$link              = $this->getVal( "registration", $focusGroup, true ) . "?pd00=" . $_GET["pd00"];;
 			$expTime           = $this->getVal( "expiration", $focusGroup );
 			$timeDate          = strtotime( $focusGroup->post_date );
 			$timeDateF         = date( "m/d/Y", $timeDate );
