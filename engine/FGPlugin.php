@@ -393,7 +393,7 @@ class FGPlugin {
         $action_name = 'check_and_close_expired_groups';
         add_action( 'wp_ajax_' . $action_name, array( $this, "checkAndCloseGroups" ) );
         add_action( 'wp_ajax_nopriv_' . $action_name, array( $this, "checkAndCloseGroups" ) );
-        add_action( 'init', array( $this, "checkAndCloseGroups" ) );
+        //add_action( 'init', array( $this, "checkAndCloseGroups" ) );
 
 		$hooksToLoadBootstrap = array(
 			"post-new.php",
