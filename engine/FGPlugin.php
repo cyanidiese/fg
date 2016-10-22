@@ -366,7 +366,7 @@ class FGPlugin {
 
 	public function checkAndCloseGroups() {
 		$args = array(
-			'posts_per_page' => - 1,
+			'posts_per_page' => -1,
 			'orderby'        => 'menu_order post_date',
 			'order'          => 'ASC',
 			'post_status'    => array( "publish", "future" ),
@@ -387,9 +387,13 @@ class FGPlugin {
 
 	public function addAllActions() {
 		add_action( 'init', array( $this, "registerCustomPostType" ) );
-		add_action( 'init', array( $this, "addTinyMCEButtons" ) );
-		add_action( 'init', array( $this, "checkAndCloseGroups" ) );
+        add_action( 'admin_init', array( $this, "addTinyMCEButtons" ) );
 		add_action( 'admin_init', array( $this, "registerScripts" ) );
+
+        $action_name = 'check_and_close_expired_groups';
+        add_action( 'wp_ajax_' . $action_name, array( $this, "checkAndCloseGroups" ) );
+        add_action( 'wp_ajax_nopriv_' . $action_name, array( $this, "checkAndCloseGroups" ) );
+        add_action( 'init', array( $this, "checkAndCloseGroups" ) );
 
 		$hooksToLoadBootstrap = array(
 			"post-new.php",
