@@ -33,6 +33,7 @@ class FGShortcodes extends StdClass {
 	}
 
 	function showFocusGroups( $atts ) {
+
 		$atts = shortcode_atts( array(
 			'city'      => '',
 			'pay'       => '',
@@ -73,45 +74,63 @@ class FGShortcodes extends StdClass {
 		}
 
 		$metaQuery = array();
+		$metaCity = array();
 		foreach ( $atts as $name => $value ) {
 			if ( trim( $value ) ) {
-				$metaQuery[] = array(
-					'key'   => "fg_" . $name,
-					'value' => $value,
-				);
-			}
+			    if($name == 'city'){
+                    $metaCity[] = [
+                        'key'   => "fg_" . $name,
+                        'value' => $value,
+                    ];
+                }
+                else
+                {
+                    $metaQuery[] = [
+                        'key'   => "fg_" . $name,
+                        'value' => $value,
+                    ];
+                }
+            }
 		}
 
 
-		if ( count( $metaQuery ) ) {
+		if ( count( $metaCity ) ) {
 
-			$metaQuery['relation'] = "OR";
-			$metaQuery[] = array(
+            $metaCity['relation'] = "OR";
+            $metaCity[] = array(
 				'key'   => "fg_is_national",
 				'value' => "yes",
 			);
 
-			$args["meta_query"] = $metaQuery;
+            $metaQuery[] = $metaCity;
 		}
 
+        $metaQuery[] = [
+            'key'   => "fg_is_open",
+            'value' => 'no',
+            'compare' => '!='
+        ];
+        $metaQuery['relation'] = "AND";
+
+        $args["meta_query"] = $metaQuery;
+
 		$postsArray = get_posts( $args );
+
 		if ( count( $postsArray ) < 1 ) {
 			return "";
 		}
 		$newPostsArray = array();
 		if ( count( $postsArray ) ) {
 			foreach ( $postsArray as $ind => $postItem ) {
-				$is_open = get_post_meta($postItem->ID, "fg_is_open", true) != "no";
-				if($is_open) {
-					$postItem->fg_values = $this->metaboxes->getValues( $postItem->ID );
-					$newPostsArray[] = $postItem;
-				}
+                $fields = [];
+                $postItem->fg_values = $this->metaboxes->getValues( $postItem->ID, $fields, false );
+                $newPostsArray[] = $postItem;
 			}
 		}
+
 		if ( count( $newPostsArray ) < 1 ) {
 			return "";
 		}
-
 		if($isListView){
 			$nationalTitle = "National";
 			$resNewArray = array();
@@ -154,6 +173,7 @@ class FGShortcodes extends StdClass {
 	}
 
 	function showSingleFocusGroup($atts) {
+
 		$atts = shortcode_atts( array(
 			'id' => '',
 		), $atts );

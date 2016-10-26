@@ -152,12 +152,17 @@ class FGMetabox extends StdClass {
 
 		return $result;
 	}
-	function getValues( $postID, &$fields = array() ) {
-		$args   = array(
-			'posts_per_page' => - 1,
-			'post_type'      => $this->postTypeSlug,
-		);
-		$posts  = get_posts( $args );
+	function getValues( $postID, &$fields = array(), $with_autocomplete = true ) {
+
+        $posts = [];
+        if($with_autocomplete)
+        {
+            $args   = array(
+                'posts_per_page' => - 1,
+                'post_type'      => $this->postTypeSlug,
+            );
+            $posts = get_posts($args);
+        }
 		$fields = count( $fields ) ? $fields : $this->getFields();
 		$result = array();
         $isNational = false;
@@ -176,7 +181,7 @@ class FGMetabox extends StdClass {
                     $fields[$fieldInd]["isNational"] = $isNational;
                 }
 
-				if ( isset( $field["autocomplete"] ) ) {
+				if ( isset( $field["autocomplete"] ) && $with_autocomplete ) {
 
 					$autocomplete = array();
 
