@@ -373,10 +373,31 @@ class FGPlugin {
 			'post_type'      => $this->postTypeSlug
 		);
 
+        $metaQuery = [
+            [
+                [
+                    'key'   => "fg_expiration",
+                    'value' => '',
+                    'compare' => '!='
+                ],
+            ],
+            [
+                'key'   => "fg_is_open",
+                'value' => 'no',
+                'compare' => '!='
+            ],
+            'relation' => 'AND',
+        ];
+        $metaQuery['relation'] = "AND";
+
+        $args['meta_query'] = $metaQuery;
+
 		$postsArray = get_posts( $args );
+
 		if ( count( $postsArray ) ) {
 			foreach ( $postsArray as $postItem ) {
 				$expMeta = get_post_meta( $postItem->ID, "fg_expiration", true );
+
 				if ( trim( $expMeta ) and ( strtotime( $expMeta ) < time() ) ) {
 					update_post_meta( $postItem->ID, "fg_is_open", "no" );
 				}
