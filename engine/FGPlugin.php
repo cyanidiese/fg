@@ -5,7 +5,7 @@ if ( ! defined( "FG_VERSION_MAIN" ) ) {
 	define( "FG_VERSION_MAIN", "1" );
 }
 if ( ! defined( "FG_VERSION_BUILD" ) ) {
-	define( "FG_VERSION_BUILD", "2" );
+	define( "FG_VERSION_BUILD", "4" );
 }
 if ( ! defined( "FG_VERSION" ) ) {
 	define( "FG_VERSION", FG_VERSION_MAIN . "." . FG_VERSION_BUILD );

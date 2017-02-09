@@ -129,6 +129,13 @@ class FGMetabox extends StdClass {
 				"name"    => "long_description",
 				"default" => ""
 			),
+            array(
+                "title"   => __( "Featured Image", FG_LANG ),
+                "type"    => "media",
+                "mediatype" => "image",
+                "name"    => "featured_image",
+                "default" => ""
+            ),
 			array(
 				"title"   => __( "Show table with other groups in this city", FG_LANG ),
 				"type"    => "switch",

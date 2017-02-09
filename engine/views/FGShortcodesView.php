@@ -288,6 +288,17 @@ class FGShortcodesView extends StdClass {
 			$imgUrl    = FG_URL . "assets/images/holder-camera.png";
 			$haveThumb = false;
 		}
+
+		$attachmentFeatID = (int) $this->getVal( "featured_image", $focusGroup );
+		if ( $attachmentFeatID ) {
+			$thumbFeat     = wp_get_attachment_image_src( $attachmentFeatID, 'full' );
+			$imgFeatUrl    = $thumbFeat[0];
+			$haveFeatThumb = true;
+		} else {
+			$imgFeatUrl    = "";
+			$haveFeatThumb = false;
+		}
+
 		$facility         = $this->getVal( "facility", $focusGroup );
 		$long_description = $this->getVal( "long_description", $focusGroup );
 		$city             = $this->getVal( "city", $focusGroup );
@@ -316,6 +327,22 @@ class FGShortcodesView extends StdClass {
 		if ( trim( $link ) ) {
 			$result .= "<p class='short-info'><a target='_blank' class='reg-single-link' href='" . $link . "'>Click Here to Sign Up</a></p>";
 		}
+
+        if ( $haveFeatThumb ) {
+            $result .= "<div class='group-featured-image'>";
+            $result .= (trim( $link )) ? "<a href='" . $link . "' target='_blank'>" : "";
+            $result .= '<img border="0" src="' . $imgFeatUrl . '">';
+            $result .= (trim( $link )) ? "</a>" : "";
+            $result .= "</div>";
+        }
+
+        if ( trim( $long_description ) ) {
+            $result .= "<div class='short-info-block'>";
+            $result .= "<p class='short-info'><b>Description:</b></p>";
+            $result .= $long_description;
+            $result .= "</div>";
+        }
+
 		$result .= "<div class='short-info-block'>";
 
 
@@ -336,12 +363,7 @@ class FGShortcodesView extends StdClass {
 
 
 		$result .= "</div>";
-		if ( trim( $long_description ) ) {
-			$result .= "<div class='short-info-block'>";
-			$result .= "<p class='short-info'><b>Description:</b></p>";
-			$result .= $long_description;
-			$result .= "</div>";
-		}
+
 		$result .= "<meta itemprop='startDate' content='" . $timeDateI . "'>
 		<meta itemprop='name' content='" . get_the_title( $postID ) . "'>
 		<meta itemprop='image' content='" . $imgUrl . "'>
