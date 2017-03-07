@@ -79,28 +79,28 @@ class FGShortcodesView extends StdClass {
 		$result .= "<div class='focus-groups-table'>
 			<div class='thead'>";
 			if($this->toShowCurrentField("date", $fieldsToShow)) {
-				$result .= "<div class='fg-column-date'>Published</div>";
+				$result .= "<div class='fg-column fg-column-date'>Published</div>";
 			}
 			if($this->toShowCurrentField("facility", $fieldsToShow)) {
-				$result .= "<div class='fg-column-facility'>Focus Group Facility</div>";
+				$result .= "<div class='fg-column fg-column-facility'>Focus Group Facility</div>";
 			}
 		if($this->toShowCurrentField("city", $fieldsToShow)) {
-				$result .= "<div class='fg-column-city'>City</div>";
+				$result .= "<div class='fg-column fg-column-city'>City</div>";
 		}
 		if($this->toShowCurrentField("gender", $fieldsToShow)) {
-				$result .= "<div class='fg-column-gender'>Demographic</div>";
+				$result .= "<div class='fg-column fg-column-gender'>Demographic</div>";
 		}
 		if($this->toShowCurrentField("pay", $fieldsToShow)) {
-			$result .= "<div class='fg-column-pay'>Pay</div>";
+			$result .= "<div class='fg-column fg-column-pay fg-column-mobile'>Pay</div>";
 		}
 		if($this->toShowCurrentField("short", $fieldsToShow)) {
-				$result .= "<div class='fg-column-short'>Short Description</div>";
+				$result .= "<div class='fg-column fg-column-short fg-column-mobile'>Short Description</div>";
 		}
 		if($this->toShowCurrentField("reg", $fieldsToShow)) {
-				$result .= "<div class='fg-column-reg'>Registration</div>";
+				$result .= "<div class='fg-column fg-column-reg'>Registration</div>";
 		}
 		if($this->toShowCurrentField("exp", $fieldsToShow)) {
-				$result .= "<div class='fg-column-exp'>Expiration</div>";
+				$result .= "<div class='fg-column fg-column-exp fg-column-mobile'>Expiration</div>";
 		}
 			$result .= "</div>";
 		foreach ( $focusGroups as $i => $focusGroup ) {
@@ -138,19 +138,19 @@ class FGShortcodesView extends StdClass {
 				     itemtype='http://schema.org/Event'>";
 
 		if($this->toShowCurrentField("date", $fieldsToShow)) {
-			$result .= "<div class='fg-column-date'>" . $timeDateF . "
+			$result .= "<div class='fg-column fg-column-date'>" . $timeDateF . "
 						<meta itemprop='startDate' content='" . $timeDateI . "'>
 					</div>";
 		}
 		if($this->toShowCurrentField("facility", $fieldsToShow)) {
-			$result .= "<div class='fg-column-facility'>
+			$result .= "<div class='fg-column fg-column-facility'>
 						" . $facility . "
 						<meta itemprop='name' content='" . $short_description . "'>
 						<meta itemprop='image' content='" . $imgUrl . "'>
 					</div>";
 		}
 			if($this->toShowCurrentField("city", $fieldsToShow)) {
-			$result .= "<div class='fg-column-city' itemprop='location' itemscope itemtype='http://schema.org/Place'>
+			$result .= "<div class='fg-column fg-column-city' itemprop='location' itemscope itemtype='http://schema.org/Place'>
 						" . $city . "
 						<meta itemprop='name' content='" . $city . "'>
 						<span itemprop='address' itemscope itemtype='http://schema.org/PostalAddress'>
@@ -159,11 +159,11 @@ class FGShortcodesView extends StdClass {
 					</div>";
 			}
 			if($this->toShowCurrentField("gender", $fieldsToShow)) {
-			$result .= "<div class='fg-column-gender'>" . $gender . "<br><span
+			$result .= "<div class='fg-column fg-column-gender'>" . $gender . "<br><span
 							itemprop='typicalAgeRange'>" . $age_range . "</span></div>";
 			}
 			if($this->toShowCurrentField("pay", $fieldsToShow)) {
-				$result .= "<div class='fg-column-pay' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>
+				$result .= "<div class='fg-column fg-column-pay fg-column-mobile' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>
 						" . $pay . "
 						<meta itemprop='price' content='" . $payMeta . "'>
 						<meta itemprop='priceCurrency' content='USD'>
@@ -171,10 +171,10 @@ class FGShortcodesView extends StdClass {
 					</div>";
 			}
 			if($this->toShowCurrentField("short", $fieldsToShow)) {
-			$result .= "<div class='fg-column-short'><b><a href='" . $postPermalink . "'>" . $short_description . "</a></b></div>";
+			$result .= "<div class='fg-column fg-column-short fg-column-mobile'><b><a href='" . $postPermalink . "'>" . $short_description . "</a></b></div>";
 			}
 			if($this->toShowCurrentField("reg", $fieldsToShow)) {
-			$result .= "<div class='fg-column-reg'>
+			$result .= "<div class='fg-column fg-column-reg'>
 					";
 			if ( trim( $link ) != $postPermalink ) {
 				$result .= "<a target='_blank' href='" . $link . "'>Click here<br>to sign up</a>";
@@ -182,7 +182,7 @@ class FGShortcodesView extends StdClass {
 			$result .= "</div>";
 			}
 			if($this->toShowCurrentField("exp", $fieldsToShow)) {
-			$result .= "<div class='fg-column-exp'>" .
+			$result .= "<div class='fg-column fg-column-exp fg-column-mobile'>" .
 			           ( ( trim( $expTime ) ) ? $timeDateFExp . "<meta itemprop='endDate' content='" . $timeDateIExp . "'>" : "" ) .
 			           "
 					</div>";
@@ -488,6 +488,12 @@ class FGShortcodesView extends StdClass {
             else{
                 $result .= "
                     <form class='fg-propose-form' method='post'>
+                        <div class='fg-propose-field'>
+
+                            <label for='fg_propose_email'>Email</label>
+                            <input type='email' id='fg_propose_email' name='fg_propose[email]' data-validation='required'>
+                            
+                        </div>
                         <div class='fg-propose-field'>
 
                             <label for='fg_propose_title'>Title</label>

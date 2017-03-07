@@ -172,3 +172,15 @@ div.focus-groups-table{
     box-shadow: 0px 0px 15px red !important;
     border-radius: 7px;
 }
+@media (max-width: 600px) {
+    .focus-groups-table .thead div.fg-column,
+    .focus-groups-table .tbody div.fg-column{
+        display: none;
+    }
+    .focus-groups-table .thead div.fg-column.fg-column-mobile,
+    .focus-groups-table .tbody div.fg-column.fg-column-mobile{
+        display: table-cell;
+        width: 33%;
+    }
+}
+

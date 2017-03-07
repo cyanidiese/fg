@@ -52,6 +52,13 @@ class FGMetabox extends StdClass {
 
 	public function getFields() {
 		return array(
+            array(
+                "title"   => __( "Email", FG_LANG ),
+                "type"    => "text",
+                "name"    => "email",
+                "default" => "",
+                "is_email" => true
+            ),
 			array(
 				"title"   => __( "Open", FG_LANG ),
 				"type"    => "switch",

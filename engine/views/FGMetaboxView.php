@@ -57,6 +57,7 @@ class FGMetaboxView extends StdClass{
     {
 
         $value = ($value) ? $value : $field["default"];
+        $is_email = !!($field["is_email"]);
 
         if ($field["prefix"] or $field["postfix"]) {
             echo '<div class="input-group">';
@@ -69,7 +70,7 @@ class FGMetaboxView extends StdClass{
 	    $autocompleteFields = ($autocomplete) ? $field["autocomplete"] : array();
         ?>
 
-        <input type="text" class="form-control <?php echo ($autocomplete)?" bootstrapSelectize ":"";?>"
+        <input type="<?php echo $is_email ? 'email' : 'text'?>" class="form-control <?php echo ($autocomplete)?" bootstrapSelectize ":"";?>"
                name="<?php echo $this->getFieldName($field["name"]); ?>"
                id="<?php echo $this->getFieldID($field["name"]); ?>"
                data-value="<?php echo $value ?>"

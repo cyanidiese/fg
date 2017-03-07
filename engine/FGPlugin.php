@@ -5,7 +5,7 @@ if ( ! defined( "FG_VERSION_MAIN" ) ) {
 	define( "FG_VERSION_MAIN", "1" );
 }
 if ( ! defined( "FG_VERSION_BUILD" ) ) {
-	define( "FG_VERSION_BUILD", "4" );
+	define( "FG_VERSION_BUILD", "5" );
 }
 if ( ! defined( "FG_VERSION" ) ) {
 	define( "FG_VERSION", FG_VERSION_MAIN . "." . FG_VERSION_BUILD );
@@ -217,6 +217,20 @@ class FGPlugin {
 
 		return $permalink;
 	}
+
+    function changePermalink( $url, $post, $leavename = false ) {
+        if ( $post->post_type == $this->postTypeSlug ) {
+
+            $city = get_post_meta($post->ID, "fg_city", true);
+            $national = get_post_meta($post->ID, "fg_is_national", true);
+            $city = ($national == "yes")?"National":$city;
+            $city = $this->slugify($city);
+
+            $url = str_replace("/listings/", "/".$city."/studies/", $url);
+        }
+        return $url;
+    }
+
 
 	function rewriteGroupPermalink() {
 		add_rewrite_rule( '([^/]+)/studies/([^/]+)/?$', 'index.php?focusgroup=$matches[2]', 'top' );
@@ -450,6 +464,8 @@ class FGPlugin {
 		//add_filter( 'post_link', array($this, 'changeGroupPermalink'), 10, 2 );
 
 		add_action( 'init', array( $this, 'rewriteGroupPermalink' ) );
+
+        add_filter( 'post_type_link', array($this, 'changePermalink'), 10, 3);
 
 		add_action( 'wp', array( $this, 'afterInitWP' ) );
 

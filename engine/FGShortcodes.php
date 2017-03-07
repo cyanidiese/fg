@@ -60,7 +60,7 @@ class FGShortcodes extends StdClass {
 			'posts_per_page' => - 1,
 			'orderby'        => 'menu_order post_date',
 			'order'          => 'ASC',
-			'post_status'    => array( "publish", "future" ),
+			'post_status'    => array( "publish" ),
 			'post_type'      => $this->metaboxes->getPostTypeSlug()
 		);
 
