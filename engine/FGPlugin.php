@@ -5,7 +5,7 @@ if ( ! defined( "FG_VERSION_MAIN" ) ) {
 	define( "FG_VERSION_MAIN", "1" );
 }
 if ( ! defined( "FG_VERSION_BUILD" ) ) {
-	define( "FG_VERSION_BUILD", "5" );
+	define( "FG_VERSION_BUILD", "5.1" );
 }
 if ( ! defined( "FG_VERSION" ) ) {
 	define( "FG_VERSION", FG_VERSION_MAIN . "." . FG_VERSION_BUILD );
@@ -168,7 +168,7 @@ class FGPlugin {
 
 
         $args = array(
-            'posts_per_page'   => -1,
+            'posts_per_page'   => 50,
             'post_type'        => $this->postTypeSlug,
             'post_status'      => 'publish'
         );
@@ -380,7 +380,7 @@ class FGPlugin {
 
 	public function checkAndCloseGroups() {
 		$args = array(
-			'posts_per_page' => -1,
+			'posts_per_page' => 50,
 			'orderby'        => 'menu_order post_date',
 			'order'          => 'ASC',
 			'post_status'    => array( "publish", "future" ),

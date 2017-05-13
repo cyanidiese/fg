@@ -121,10 +121,14 @@ class FGShortcodes extends StdClass {
 		}
 		$newPostsArray = array();
 		if ( count( $postsArray ) ) {
+		    $current_time = time();
 			foreach ( $postsArray as $ind => $postItem ) {
                 $fields = [];
-                $postItem->fg_values = $this->metaboxes->getValues( $postItem->ID, $fields, false );
-                $newPostsArray[] = $postItem;
+                $expiration_time = strtotime(get_post_meta( $postItem->ID, 'fg_expiration', true ));
+                if($expiration_time >= $current_time) {
+                    $postItem->fg_values = $this->metaboxes->getValues($postItem->ID, $fields, false);
+                    $newPostsArray[] = $postItem;
+                }
 			}
 		}
 

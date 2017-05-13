@@ -2,6 +2,11 @@
     color: #2B2B2B;
     font-size: 0.8em;
 }
+
+.focus-groups-table a:visited {
+    color: #0B0080;
+}
+
 div.focus-groups-table{
     display: table;
     border-collapse: collapse;
@@ -183,4 +188,3 @@ div.focus-groups-table{
         width: 33%;
     }
 }
-

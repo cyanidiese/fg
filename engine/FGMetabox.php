@@ -267,22 +267,21 @@ class FGMetabox extends StdClass {
 	}
 
 	public function getAllSavedCities() {
-		$args         = array(
-			'posts_per_page' => - 1,
-			'post_type'      => $this->postTypeSlug,
-		);
-		$posts        = get_posts( $args );
-		$autocomplete = array();
-		$metaName     = "fg_city";
 
-		if ( count( $posts ) ) {
-			foreach ( $posts as $item ) {
-				$metaVal = get_post_meta( $item->ID, $metaName, true );
-				if ( trim( $metaVal ) ) {
-					$autocomplete[] = $metaVal;
-				}
-			}
-		}
+	    global $wpdb;
+
+        $autocomplete = array();
+
+	    $query = "SELECT distinct(`meta_value`) FROM `{$wpdb->prefix}postmeta` WHERE `meta_key` = 'fg_city' ORDER BY `meta_value` ASC";
+        $query_results = $wpdb->get_results($query);
+
+        if ( count( $query_results ) ) {
+            foreach ( $query_results as $query_result ) {
+                if(trim($query_result->meta_value)) {
+                    $autocomplete[] = $query_result->meta_value;
+                }
+            }
+        }
 		$autocomplete = array_merge( $autocomplete, $this->getCities() );
 		$autocomplete = array_unique( $autocomplete );
 		sort( $autocomplete );
