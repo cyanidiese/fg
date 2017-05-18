@@ -4,10 +4,12 @@ class FGShortcodesView extends StdClass {
 
 	private $postTypeSlug;
 	private $shortCodesEngine;
+	private $registration;
 
-	public function __construct( $postTypeSlug, $shortCodesEngine ) {
+	public function __construct( $postTypeSlug, $shortCodesEngine, $registration ) {
 		$this->postTypeSlug = $postTypeSlug;
 		$this->shortCodesEngine = $shortCodesEngine;
+		$this->registration = $registration;
 	}
 
     public function slugify($text)
@@ -74,126 +76,127 @@ class FGShortcodesView extends StdClass {
 		return (count($fieldsToShow))? in_array($fieldName, $fieldsToShow): true;
 	}
 
-	private function groupView( $focusGroups, $fieldsToShow = [] ) {
-		$result = "";
-		$result .= "<div class='focus-groups-table'>
+	private function groupView( $focusGroups, $fieldsToShow = [] )
+    {
+        $result = "";
+        $result .= "<div class='focus-groups-table'>
 			<div class='thead'>";
-			if($this->toShowCurrentField("date", $fieldsToShow)) {
-				$result .= "<div class='fg-column fg-column-date'>Published</div>";
-			}
-			if($this->toShowCurrentField("facility", $fieldsToShow)) {
-				$result .= "<div class='fg-column fg-column-facility'>Focus Group Facility</div>";
-			}
-		if($this->toShowCurrentField("city", $fieldsToShow)) {
-				$result .= "<div class='fg-column fg-column-city'>City</div>";
-		}
-		if($this->toShowCurrentField("gender", $fieldsToShow)) {
-				$result .= "<div class='fg-column fg-column-gender'>Demographic</div>";
-		}
-		if($this->toShowCurrentField("pay", $fieldsToShow)) {
-			$result .= "<div class='fg-column fg-column-pay fg-column-mobile'>Pay</div>";
-		}
-		if($this->toShowCurrentField("short", $fieldsToShow)) {
-				$result .= "<div class='fg-column fg-column-short fg-column-mobile'>Short Description</div>";
-		}
-		if($this->toShowCurrentField("reg", $fieldsToShow)) {
-				$result .= "<div class='fg-column fg-column-reg'>Registration</div>";
-		}
-		if($this->toShowCurrentField("exp", $fieldsToShow)) {
-				$result .= "<div class='fg-column fg-column-exp fg-column-mobile'>Expiration</div>";
-		}
-			$result .= "</div>";
-		foreach ( $focusGroups as $i => $focusGroup ) {
-			$postID        = $focusGroup->ID;
-			$postPermalink = $this->get_permalink( $postID );
+        if ($this->toShowCurrentField("date", $fieldsToShow)) {
+            $result .= "<div class='fg-column fg-column-date'>Published</div>";
+        }
+        if ($this->toShowCurrentField("facility", $fieldsToShow)) {
+            $result .= "<div class='fg-column fg-column-facility'>Focus Group Facility</div>";
+        }
+        if ($this->toShowCurrentField("city", $fieldsToShow)) {
+            $result .= "<div class='fg-column fg-column-city'>City</div>";
+        }
+        if ($this->toShowCurrentField("gender", $fieldsToShow)) {
+            $result .= "<div class='fg-column fg-column-gender'>Demographic</div>";
+        }
+        if ($this->toShowCurrentField("pay", $fieldsToShow)) {
+            $result .= "<div class='fg-column fg-column-pay fg-column-mobile'>Pay</div>";
+        }
+        if ($this->toShowCurrentField("short", $fieldsToShow)) {
+            $result .= "<div class='fg-column fg-column-short fg-column-mobile'>Short Description</div>";
+        }
+        if ($this->toShowCurrentField("reg", $fieldsToShow)) {
+            $result .= "<div class='fg-column fg-column-reg'>Registration</div>";
+        }
+        if ($this->toShowCurrentField("exp", $fieldsToShow)) {
+            $result .= "<div class='fg-column fg-column-exp fg-column-mobile'>Expiration</div>";
+        }
+        $result .= "</div>";
+        foreach ($focusGroups as $i => $focusGroup) {
+            $postID = $focusGroup->ID;
+            $postPermalink = $this->get_permalink($postID);
 
-			$attachmentID = (int) $this->getVal( "logo", $focusGroup );
-			if ( $attachmentID ) {
-				$thumb     = wp_get_attachment_image_src( $attachmentID );
-				$imgUrl    = $thumb[0];
-				$haveThumb = true;
-			} else {
-				$imgUrl    = FG_URL . "assets/images/holder-camera.png";
-				$haveThumb = false;
-			}
-			$facility          = $this->getVal( "facility", $focusGroup );
-			$short_description = $this->getVal( "short_description", $focusGroup );
-			$city              = $this->getVal( "city", $focusGroup );
-			$pay               = $this->getVal( "pay", $focusGroup );
-			$payMeta           = $this->getVal( "pay", $focusGroup, true );
-			$gender            = $this->getVal( "gender", $focusGroup );
-			$age_range         = $this->getVal( "age_range", $focusGroup );
-			$link              = $this->getVal( "registration", $focusGroup, true ) . "?pd00=" . $_GET["pd00"];;
-			$expTime           = $this->getVal( "expiration", $focusGroup );
-			$timeDate          = strtotime( $focusGroup->post_date );
-			$timeDateF         = date( "m/d/Y", $timeDate );
-			$timeDateI         = date( "Y-m-d", $timeDate );
-			$timeDateExp       = strtotime( $expTime );
-			$timeDateFExp      = date( "m/d/Y", $timeDateExp );
-			$timeDateIExp      = date( "Y-m-d", $timeDateExp );
-			$rowClass          = ( $i % 2 > 0 ) ? "even" : "odd";
+            $attachmentID = (int)$this->getVal("logo", $focusGroup);
+            if ($attachmentID) {
+                $thumb = wp_get_attachment_image_src($attachmentID);
+                $imgUrl = $thumb[0];
+                $haveThumb = true;
+            } else {
+                $imgUrl = FG_URL . "assets/images/holder-camera.png";
+                $haveThumb = false;
+            }
+            $facility = $this->getVal("facility", $focusGroup);
+            $short_description = $this->getVal("short_description", $focusGroup);
+            $city = $this->getVal("city", $focusGroup);
+            $pay = $this->getVal("pay", $focusGroup);
+            $payMeta = $this->getVal("pay", $focusGroup, true);
+            $gender = $this->getVal("gender", $focusGroup);
+            $age_range = $this->getVal("age_range", $focusGroup);
+            $link = $this->getVal("registration", $focusGroup, true) . "?pd00=" . $_GET["pd00"];;
+            $expTime = $this->getVal("expiration", $focusGroup);
+            $timeDate = strtotime($focusGroup->post_date);
+            $timeDateF = date("m/d/Y", $timeDate);
+            $timeDateI = date("Y-m-d", $timeDate);
+            $timeDateExp = strtotime($expTime);
+            $timeDateFExp = date("m/d/Y", $timeDateExp);
+            $timeDateIExp = date("Y-m-d", $timeDateExp);
+            $rowClass = ($i % 2 > 0) ? "even" : "odd";
 
 
-			$result .= "<div class='tbody " . $rowClass . "'  itemscope
+            $result .= "<div class='tbody " . $rowClass . "'  itemscope
 				     itemtype='http://schema.org/Event'>";
 
-		if($this->toShowCurrentField("date", $fieldsToShow)) {
-			$result .= "<div class='fg-column fg-column-date'>" . $timeDateF . "
+            if ($this->toShowCurrentField("date", $fieldsToShow)) {
+                $result .= "<div class='fg-column fg-column-date'>" . $timeDateF . "
 						<meta itemprop='startDate' content='" . $timeDateI . "'>
 					</div>";
-		}
-		if($this->toShowCurrentField("facility", $fieldsToShow)) {
-			$result .= "<div class='fg-column fg-column-facility'>
+            }
+            if ($this->toShowCurrentField("facility", $fieldsToShow)) {
+                $result .= "<div class='fg-column fg-column-facility'>
 						" . $facility . "
 						<meta itemprop='name' content='" . $short_description . "'>
 						<meta itemprop='image' content='" . $imgUrl . "'>
 					</div>";
-		}
-			if($this->toShowCurrentField("city", $fieldsToShow)) {
-			$result .= "<div class='fg-column fg-column-city' itemprop='location' itemscope itemtype='http://schema.org/Place'>
+            }
+            if ($this->toShowCurrentField("city", $fieldsToShow)) {
+                $result .= "<div class='fg-column fg-column-city' itemprop='location' itemscope itemtype='http://schema.org/Place'>
 						" . $city . "
 						<meta itemprop='name' content='" . $city . "'>
 						<span itemprop='address' itemscope itemtype='http://schema.org/PostalAddress'>
 							<meta itemprop='addressLocality' content='" . $city . "'>
 						</span>
 					</div>";
-			}
-			if($this->toShowCurrentField("gender", $fieldsToShow)) {
-			$result .= "<div class='fg-column fg-column-gender'>" . $gender . "<br><span
+            }
+            if ($this->toShowCurrentField("gender", $fieldsToShow)) {
+                $result .= "<div class='fg-column fg-column-gender'>" . $gender . "<br><span
 							itemprop='typicalAgeRange'>" . $age_range . "</span></div>";
-			}
-			if($this->toShowCurrentField("pay", $fieldsToShow)) {
-				$result .= "<div class='fg-column fg-column-pay fg-column-mobile' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>
+            }
+            if ($this->toShowCurrentField("pay", $fieldsToShow)) {
+                $result .= "<div class='fg-column fg-column-pay fg-column-mobile' itemprop='offers' itemscope itemtype='http://schema.org/Offer'>
 						" . $pay . "
 						<meta itemprop='price' content='" . $payMeta . "'>
 						<meta itemprop='priceCurrency' content='USD'>
-						<meta itemprop='url' content='" . ( ( trim( $link ) ) ? $link : $postPermalink ) . "'>
+						<meta itemprop='url' content='" . ((trim($link)) ? $link : $postPermalink) . "'>
 					</div>";
-			}
-			if($this->toShowCurrentField("short", $fieldsToShow)) {
-			$result .= "<div class='fg-column fg-column-short fg-column-mobile'><b><a href='" . $postPermalink . "'>" . $short_description . "</a></b></div>";
-			}
-			if($this->toShowCurrentField("reg", $fieldsToShow)) {
-			$result .= "<div class='fg-column fg-column-reg'>
-					";
-			if ( trim( $link ) != $postPermalink ) {
-				$result .= "<a target='_blank' href='" . $link . "'>Click here<br>to sign up</a>";
-			}
-			$result .= "</div>";
-			}
-			if($this->toShowCurrentField("exp", $fieldsToShow)) {
-			$result .= "<div class='fg-column fg-column-exp fg-column-mobile'>" .
-			           ( ( trim( $expTime ) ) ? $timeDateFExp . "<meta itemprop='endDate' content='" . $timeDateIExp . "'>" : "" ) .
-			           "
-					</div>";
-			}
-			$result .= "</div>
-			";
-		}
-		$result .= '</div>';
+            }
+            if ($this->toShowCurrentField("short", $fieldsToShow)) {
+                $result .= "<div class='fg-column fg-column-short fg-column-mobile'><b><a href='" . $postPermalink . "'>" . $short_description . "</a></b></div>";
+            }
+            if ($this->toShowCurrentField("reg", $fieldsToShow)) {
+                $result .= "<div class='fg-column fg-column-reg'>";
+                if (trim($link) != $postPermalink) {
+                    $sign_up_link = "<a target='_blank' href='" . $link . "'>Click here<br>to sign up</a>";
+                    $login_link = "<a href='" . wp_login_url(get_permalink()) . "' title='Login'>Login</a>";
+                    $result .= (is_user_logged_in()) ? $sign_up_link : $login_link;
+                }
+                $result .= "</div>";
+            }
+            if ($this->toShowCurrentField("exp", $fieldsToShow)) {
+                $result .= "<div class='fg-column fg-column-exp fg-column-mobile'>" .
+                    ((trim($expTime)) ? $timeDateFExp . "<meta itemprop='endDate' content='" . $timeDateIExp . "'>" : "") .
+                    "</div>";
+            }
+            $result .= "</div>";
+        }
 
-		return $result;
-	}
+        $result .= '</div>';
+
+        return $result;
+    }
 
 	private function groupViewList( $focusGroups ) {
 		$result = "";
@@ -325,7 +328,11 @@ class FGShortcodesView extends StdClass {
 			$result .= "<h2>" . get_the_title($postID) . "</h2>";
 		}
 		if ( trim( $link ) ) {
-			$result .= "<p class='short-info'><a target='_blank' class='reg-single-link' href='" . $link . "'>Click Here to Sign Up</a></p>";
+            $sign_up_link = "<a target='_blank' class='reg-single-link' href='" . $link . "'>Click Here to Sign Up</a>";
+            $login_link = "<a href='" . wp_login_url(get_permalink()) . "' title='Login'>Login</a>";
+            $result .= "<p class='short-info'>";
+            $result .= (is_user_logged_in()) ? $sign_up_link : $login_link;
+			$result .= "</p>";
 		}
 
         if ( $haveFeatThumb ) {

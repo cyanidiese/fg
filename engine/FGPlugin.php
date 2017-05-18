@@ -5,7 +5,7 @@ if ( ! defined( "FG_VERSION_MAIN" ) ) {
 	define( "FG_VERSION_MAIN", "1" );
 }
 if ( ! defined( "FG_VERSION_BUILD" ) ) {
-	define( "FG_VERSION_BUILD", "5.1" );
+	define( "FG_VERSION_BUILD", "5.2" );
 }
 if ( ! defined( "FG_VERSION" ) ) {
 	define( "FG_VERSION", FG_VERSION_MAIN . "." . FG_VERSION_BUILD );
@@ -14,7 +14,9 @@ if ( ! defined( "FG_EMBED" ) ) {
 	define( "FG_EMBED", false );
 }
 
+require_once "FGHelpers.php";
 require_once "FGProposed.php";
+require_once "FGRegistration.php";
 require_once "FGMetabox.php";
 require_once "FGShortcodes.php";
 require_once "FGWidget.php";
@@ -26,6 +28,7 @@ class FGPlugin {
 
 	private $metaboxes;
 	private $shortcodes;
+	private $registration;
 	private $proposed;
 
 	public function registerScripts() {
@@ -194,6 +197,18 @@ class FGPlugin {
                 }
             }
         }
+    }
+
+    public function registerCustomMemberRole(){
+        add_role(
+            'member',
+            __( 'Member' ),
+            array(
+                'read'         => false,
+                'edit_posts'   => false,
+                'delete_posts' => false,
+            )
+        );
     }
 
 	public function slugify( $text ) {
@@ -419,78 +434,118 @@ class FGPlugin {
 		}
 	}
 
+    function onRenderFooter()
+    {
 
-	public function addAllActions() {
-		add_action( 'init', array( $this, "registerCustomPostType" ) );
-        add_action( 'admin_init', array( $this, "addTinyMCEButtons" ) );
-		add_action( 'admin_init', array( $this, "registerScripts" ) );
+    }
 
-        $action_name = 'check_and_close_expired_groups';
-        add_action( 'wp_ajax_' . $action_name, array( $this, "checkAndCloseGroups" ) );
-        add_action( 'wp_ajax_nopriv_' . $action_name, array( $this, "checkAndCloseGroups" ) );
-        //add_action( 'init', array( $this, "checkAndCloseGroups" ) );
 
-		$hooksToLoadBootstrap = array(
-			"post-new.php",
-			"post.php",
-			"edit.php",
-			"widgets.php",
-		);
-		foreach ( $hooksToLoadBootstrap as $hook ) {
-			add_action( 'admin_print_scripts-' . $hook, array( $this, "includeScriptsAndStyles" ) );
-		}
+    function onLoginHeader()
+    {
+        echo '
+   <style type="text/css">
+        #login h1 a 
+        { 
+        background: url(' . FG_URL . '/assets/images/FocusGroupsLogo.png) no-repeat 0 0 !important;
+        width: 280px;
+        height: 60px;
+        }
+        body{
+            background: white;
+        }
+        .login form{
+            box-shadow: inset 0 0 6px 0px;
+            border-radius: 12px;
+        }
+        #login{
+            width: 350px;
+        }
+    </style>';
+    }
 
-		add_action( 'admin_print_scripts', array( $this, "includeGlobalAdminScriptsAndStyles" ) );
 
-		add_action( 'wp_enqueue_scripts', array( $this, "includeFrontendScriptsAndStyles" ) );
+   public function addAllActions()
+   {
+       add_action('init', array($this, "registerCustomPostType"));
+       add_action('init', array($this, "registerCustomMemberRole"));
+       add_action('admin_init', array($this, "addTinyMCEButtons"));
+       add_action('admin_init', array($this, "registerScripts"));
+       add_action('wp_footer', array($this, 'onRenderFooter'));
+       add_action('login_head', array($this, 'onLoginHeader'));
 
-		add_filter( 'wp_insert_post_data', array( $this->metaboxes, "updatePostContentByShortcode" ), 99, 2 );
-		add_action( 'save_post', array( $this->metaboxes, "saveMetaBoxData" ) );
+       $this->registration->addRegistrationActions();
 
-		add_filter( 'manage_edit-' . $this->postTypeSlug . '_columns', array( $this, 'editGroupsAdminColumns' ) );
-		add_action( 'manage_' . $this->postTypeSlug . '_posts_custom_column', array(
-				$this,
-				'manageGroupsAdminColumns'
-			), 10, 2 );
+       $action_name = 'check_and_close_expired_groups';
+       add_action('wp_ajax_' . $action_name, array($this, "checkAndCloseGroups"));
+       add_action('wp_ajax_nopriv_' . $action_name, array($this, "checkAndCloseGroups"));
+       //add_action( 'init', array( $this, "checkAndCloseGroups" ) );
 
-		add_filter( 'the_title', array( $this, 'changeGroupTitleIfClosed' ), 10, 2 );
+       update_option('users_can_register', 1);
+       update_option('default_role', 'member');
 
-		add_action( "wp_ajax_fg_insert_dialog", array( $this->shortcodes, "addPopupContent" ) );
+       $hooksToLoadBootstrap = array(
+           "post-new.php",
+           "post.php",
+           "edit.php",
+           "widgets.php",
+       );
+       foreach ($hooksToLoadBootstrap as $hook) {
+           add_action('admin_print_scripts-' . $hook, array($this, "includeScriptsAndStyles"));
+       }
 
-		add_filter( 'the_focus_group_title', array( $this, 'theFocusGroupTitle' ), 10, 2 );
+       add_action('admin_print_scripts', array($this, "includeGlobalAdminScriptsAndStyles"));
 
-		add_filter( 'the_focus_group_cities', array( $this->metaboxes, 'getAllSavedCities' ), 10 );
+       add_action('wp_enqueue_scripts', array($this, "includeFrontendScriptsAndStyles"));
 
-		//add_filter( 'post_link', array($this, 'changeGroupPermalink'), 10, 2 );
+       add_filter('wp_insert_post_data', array($this->metaboxes, "updatePostContentByShortcode"), 99, 2);
+       add_action('save_post', array($this->metaboxes, "saveMetaBoxData"));
 
-		add_action( 'init', array( $this, 'rewriteGroupPermalink' ) );
+       add_filter('manage_edit-' . $this->postTypeSlug . '_columns', array($this, 'editGroupsAdminColumns'));
+       add_action('manage_' . $this->postTypeSlug . '_posts_custom_column', array(
+           $this,
+           'manageGroupsAdminColumns'
+       ), 10, 2);
 
-        add_filter( 'post_type_link', array($this, 'changePermalink'), 10, 3);
+       add_filter('the_title', array($this, 'changeGroupTitleIfClosed'), 10, 2);
 
-		add_action( 'wp', array( $this, 'afterInitWP' ) );
+       add_action("wp_ajax_fg_insert_dialog", array($this->shortcodes, "addPopupContent"));
 
-		add_action('widgets_init',
-			create_function('', 'return register_widget("FGWidget");')
-		);
+       add_filter('the_focus_group_title', array($this, 'theFocusGroupTitle'), 10, 2);
 
-		$this->shortcodes->activateShortCodes();
-	}
+       add_filter('the_focus_group_cities', array($this->metaboxes, 'getAllSavedCities'), 10);
 
-	public function __construct() {
-		load_plugin_textdomain( FG_LANG, false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
+       //add_filter( 'post_link', array($this, 'changeGroupPermalink'), 10, 2 );
 
-		global $fgMetaboxes, $fgShortcodes;
-		$this->pluginSlug   = "fg_admin";
-		$this->postTypeSlug = "focusgroup";
-		$this->pluginName   = "FocusGroups";
+       add_action('init', array($this, 'rewriteGroupPermalink'));
 
-		$this->proposed  = new FGProposed( $this->postTypeSlug );
-		$this->metaboxes  = new FGMetabox( $this->postTypeSlug );
-		$this->shortcodes = new FGShortcodes( $this->metaboxes, $this->postTypeSlug, $this->proposed );
-		$fgMetaboxes = $this->metaboxes;
-		$fgShortcodes = $this->shortcodes;
+       add_filter('post_type_link', array($this, 'changePermalink'), 10, 3);
 
-		$this->addAllActions();
-	}
+       add_action('wp', array($this, 'afterInitWP'));
+
+       add_action('widgets_init',
+                  create_function('', 'return register_widget("FGWidget");')
+       );
+
+       $this->shortcodes->activateShortCodes();
+   }
+
+   public function __construct()
+   {
+       load_plugin_textdomain(FG_LANG, false, dirname(plugin_basename(__FILE__)) . '/lang');
+
+       global $fgMetaboxes, $fgShortcodes;
+       $this->pluginSlug = "fg_admin";
+       $this->postTypeSlug = "focusgroup";
+       $this->pluginName = "FocusGroups";
+
+       $this->registration = new FGRegistration();
+       $this->proposed = new FGProposed($this->postTypeSlug);
+       $this->metaboxes = new FGMetabox($this->postTypeSlug);
+       $this->shortcodes = new FGShortcodes($this->metaboxes, $this->postTypeSlug, $this->proposed, $this->registration);
+       $fgMetaboxes = $this->metaboxes;
+       $fgShortcodes = $this->shortcodes;
+
+       $this->addAllActions();
+   }
 
 }

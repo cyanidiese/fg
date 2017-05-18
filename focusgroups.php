@@ -3,7 +3,7 @@
 Plugin Name: Focus Groups
 Description: Focus Groups plugin
 Author: CYAN-ID
-Version: 1.5.1
+Version: 1.5.2
 */
 
 define( "FG_LANG", "focusgroups" );

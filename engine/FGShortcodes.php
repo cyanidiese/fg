@@ -8,9 +8,9 @@ class FGShortcodes extends StdClass {
 	private $shortcodeView;
 	private $postTypeSlug;
 
-	function __construct( $metaboxes, $postTypeSlug, $propose ) {
+	function __construct( $metaboxes, $postTypeSlug, $propose, $registration ) {
 		$this->metaboxes     = $metaboxes;
-		$this->shortcodeView = new FGShortcodesView($postTypeSlug, $propose);
+		$this->shortcodeView = new FGShortcodesView($postTypeSlug, $propose, $registration);
 		$this->postTypeSlug = $postTypeSlug;
 	}
 
